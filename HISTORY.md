@@ -3,10 +3,28 @@
 ## 5.18.3-ververica (08/15/2019)
 * [Flink TTL] compaction filter for background cleanup of state with time-to-live
 * [Flink ListState] Separator-free merge operator
+* Fix JEMALLOC_CXX_THROW macro missing from older Jemalloc versions, causing build failures on some platforms.
 
 ## 5.18.3 (2/11/2019)
 ### Bug Fixes
 * Fix possible LSM corruption when both range deletions and subcompactions are used. The symptom of this corruption is L1+ files overlapping in the user key space.
+
+## 6.0.0 (2/19/2019)
+### New Features
+* Enabled checkpoint on readonly db (DBImplReadOnly).
+* Make DB ignore dropped column families while committing results of atomic flush.
+* RocksDB may choose to preopen some files even if options.max_open_files != -1. This may make DB open slightly longer.
+* For users of dictionary compression with ZSTD v0.7.0+, we now reuse the same digested dictionary when compressing each of an SST file's data blocks for faster compression speeds.
+* For all users of dictionary compression who set `cache_index_and_filter_blocks == true`, we now store dictionary data used for decompression in the block cache for better control over memory usage. For users of ZSTD v1.1.4+ who compile with -DZSTD_STATIC_LINKING_ONLY, this includes a digested dictionary, which is used to increase decompression speed.
+* Add support for block checksums verification for external SST files before ingestion.
+* Introduce stats history which periodically saves Statistics snapshots and added `GetStatsHistory` API to retrieve these snapshots.
+* Add a place holder in manifest which indicate a record from future that can be safely ignored.
+* Add support for trace sampling.
+* Enable properties block checksum verification for block-based tables.
+* For all users of dictionary compression, we now generate a separate dictionary for compressing each bottom-level SST file. Previously we reused a single dictionary for a whole compaction to bottom level. The new approach achieves better compression ratios; however, it uses more memory and CPU for buffering/sampling data blocks and training dictionaries.
+* Add whole key bloom filter support in memtable.
+* Files written by `SstFileWriter` will now use dictionary compression if it is configured in the file writer's `CompressionOptions`.
+>>>>>>> 8a1ecd198... Fix build failures due to missing JEMALLOC_CXX_THROW macro (#5053)
 
 ## 5.18.2 (01/31/2019)
 ### Public API Change
