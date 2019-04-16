@@ -1,4 +1,9 @@
-# Rocksdb Change Log
+# FRocksdb Change Log
+
+## 5.18.3-ververica (08/15/2019)
+* [Flink TTL] compaction filter for background cleanup of state with time-to-live
+* [Flink ListState] Separator-free merge operator
+
 ## 5.18.3 (2/11/2019)
 ### Bug Fixes
 * Fix possible LSM corruption when both range deletions and subcompactions are used. The symptom of this corruption is L1+ files overlapping in the user key space.
